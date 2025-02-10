@@ -141,7 +141,7 @@ internal class GridToBlockContentHelper
                         block.SettingsData.Add(settings);
                     }
 
-                    if (areaIsFullWidth)
+                    if (false && areaIsFullWidth)
                     {
                         blockLayouts.AddRange(layouts);
                     }

@@ -79,7 +79,8 @@ internal static class GridConfigurationExtensions
                     BackgroundColor = Grid.GridBlocks.Background,
                     IconColor = Grid.GridBlocks.Icon,
                     View = Grid.GridBlocks.View,
-                    AllowAtRoot = false
+                    AllowAtRoot = false,
+                    EditorSize = Grid.GridBlocks.EditorSize
                 };
             }
         }
