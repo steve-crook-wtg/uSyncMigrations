@@ -110,13 +110,13 @@ internal class GridToBlockContentHelper
 
                     // get the content
                     var content = GetGridAreaBlockContent(area.value, context).ToList();
-                    if (!content.Any()) continue;
+                    //if (!content.Any()) continue;
 
                     var settings = GetSettingsBlockItemDataFromArea(area.value, context, dataTypeAlias);
 
                     // get the layouts 
                     var layouts = GetGridAreaBlockLayouts(area.value, content).ToList();
-                    if (!layouts.Any()) continue;
+                    //if (!layouts.Any()) continue;
 
                     if (settings is not null)
                     {
@@ -356,7 +356,8 @@ internal class GridToBlockContentHelper
                 var dataType = context.DataTypes.GetNewDataType(property.DataTypeAlias);
 
                 if (dataType != null &&
-                    dataType.Config is RadioButtonListConfig)
+                    dataType.Config is RadioButtonListConfig &&
+                    configValue.Type == JTokenType.String)
                 {
                     var radioButtonListConfig = (dataType.Config as RadioButtonListConfig)!;
                     var configItem = radioButtonListConfig.Items.FirstOrDefault(i => i.OldValue == configValue.Value<string>());

@@ -29,7 +29,7 @@ public class GridViewPropertyMediaMigrator : IGridSettingsViewMigrator
                                 nameof(ValueStorageType.Ntext), 
                                 new MediaPickerConfig()
                                 {
-                                    Filter = "Image,umbracoMediaVectorGraphics,umbracoMediaVideo"
+                                    Filter = "Image,File"
                                 });
 
         return newDataTypeInfo;

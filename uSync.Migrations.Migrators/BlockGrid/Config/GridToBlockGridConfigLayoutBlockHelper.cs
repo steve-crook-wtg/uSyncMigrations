@@ -35,7 +35,7 @@ internal class GridToBlockGridConfigLayoutBlockHelper
 
         if (addAreaSettings)
         {
-            GetAreaSettingsElementType(context);
+            AddAreaSettingsElementType(context);
         }
 
         AddContentTypesForLayoutBlocks(gridBlockContext, context);
@@ -145,6 +145,7 @@ internal class GridToBlockGridConfigLayoutBlockHelper
 
         foreach (var layout in gridLayoutConfigurations)
         {
+            string? layoutName = layout.Label ?? layout.Name;
             if (layout.Areas == null) continue;
 
             var rowAreas = new List<BlockGridConfiguration.BlockGridAreaConfiguration>();
@@ -175,7 +176,7 @@ internal class GridToBlockGridConfigLayoutBlockHelper
                     RowSpan = 1
                 };
 
-                var alias = _conventions.LayoutAreaAlias(layout.Name, area.Alias);
+                var alias = _conventions.LayoutAreaAlias(layoutName, area.Alias);
                 area.Key = alias.ToGuid();
 
                 rowAreas.Add(area);
@@ -186,12 +187,12 @@ internal class GridToBlockGridConfigLayoutBlockHelper
 
             if (rowAreas.Count == 0) continue;
 
-            var contentTypeAlias = _conventions.LayoutContentTypeAlias(layout.Name);
+            var contentTypeAlias = _conventions.LayoutContentTypeAlias(layoutName);
             var settingsContentTypeAlias = _conventions.LayoutSettingsContentTypeAlias(dataTypeAlias);
 
             var layoutBlock = new BlockGridConfiguration.BlockGridBlockConfiguration
             {
-                Label = layout?.Name,
+                Label = layoutName,
                 Areas = rowAreas.ToArray(),
                 ContentElementTypeKey = context.GetContentTypeKeyOrDefault(contentTypeAlias, contentTypeAlias.ToGuid()),
                 SettingsElementTypeKey = context.GetContentTypeKeyOrDefault(settingsContentTypeAlias, settingsContentTypeAlias.ToGuid()),
@@ -202,7 +203,7 @@ internal class GridToBlockGridConfigLayoutBlockHelper
 
             gridBlockContext.LayoutBlocks.TryAdd(contentTypeAlias, layoutBlock);
 
-            context.ContentTypes.AddNewContentType(new NewContentTypeInfo(layoutBlock.ContentElementTypeKey, contentTypeAlias, layout?.Name ?? contentTypeAlias, "icon-layout color-purple", folder: "BlockGrid/Layouts")
+            context.ContentTypes.AddNewContentType(new NewContentTypeInfo(layoutBlock.ContentElementTypeKey, contentTypeAlias, layoutName ?? contentTypeAlias, "icon-layout color-purple", folder: "BlockGrid/Layouts")
             {
                 //Description = "Grid Layoutblock",
                 IsElement = true
@@ -211,7 +212,7 @@ internal class GridToBlockGridConfigLayoutBlockHelper
 
     }
 
-    private void GetAreaSettingsElementType(SyncMigrationContext context)
+    private void AddAreaSettingsElementType(SyncMigrationContext context)
     {
         var contentType = new NewContentTypeInfo(
             _conventions.AreaSettingsElementTypeAlias.ToGuid(),

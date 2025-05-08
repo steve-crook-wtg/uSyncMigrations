@@ -31,6 +31,10 @@ public class BlockMigrationPlan : ISyncMigrationPlan
         {
             { UmbConstants.PropertyEditors.Aliases.NestedContent, "NestedToBlockListMigrator" },
             { UmbConstants.PropertyEditors.Aliases.Grid, "GridToBlockGridMigrator" }
+        },
+        IgnoredProperties = new List<string>
+        {
+            "mainImageAltText"
         }
     };
 }

@@ -120,6 +120,7 @@ internal class GridToBlockGridConfigBlockHelper
         var allowedContentTypes = new Dictionary<string, Guid[]>();
 
         foreach (var editor in gridEditorsConfig.Editors
+            .Where(x => x.Alias != "docType") // This appears to be coming from the installed DTGE? Exclude or it will add all remaining doc types
             .Where(x => referencedEditors.Contains("*") ||
             referencedEditors.InvariantContains(x.Alias!)))
         {

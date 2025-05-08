@@ -13,6 +13,8 @@ namespace uSync.Migrations.Migrators.Core;
 [SyncMigrator(UmbEditors.Aliases.MediaPicker)]
 [SyncMigrator("Umbraco.MediaPicker2")]
 [SyncMigrator(UmbEditors.Aliases.MultipleMediaPicker)]
+[SyncDefaultMigrator]
+[SyncMigratorVersion(8)]
 public class MediaPickerMigrator : SyncPropertyMigratorBase
 {
     public override string GetEditorAlias(SyncMigrationDataTypeProperty dataTypeProperty, SyncMigrationContext context)
@@ -29,7 +31,9 @@ public class MediaPickerMigrator : SyncPropertyMigratorBase
         };
 
         var imageOnly = dataTypeProperty.PreValues.GetPreValueOrDefault("onlyImages", false);
-        if (imageOnly) config.Filter = UmbConstants.Conventions.MediaTypes.Image;
+        if (imageOnly) config.Filter = UmbConstants.Conventions.MediaTypes.Image + "," + UmbConstants.Conventions.MediaTypes.VectorGraphics;
+
+        var config1 = config.MapPreValues(dataTypeProperty.PreValues);
 
         var mappings = new Dictionary<string, string>
         {
@@ -37,7 +41,9 @@ public class MediaPickerMigrator : SyncPropertyMigratorBase
             { "startNodeId", nameof(config.StartNodeId) },
         };
 
-        return config.MapPreValues(dataTypeProperty.PreValues, mappings);
+        var configValues = config.MapPreValues(dataTypeProperty.PreValues, mappings);
+
+        return configValues;
     }
 
     public override string? GetContentValue(SyncMigrationContentProperty contentProperty, SyncMigrationContext context)

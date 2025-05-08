@@ -7,6 +7,7 @@ using Umbraco.Cms.Core.Strings;
 using Umbraco.Extensions;
 
 using uSync.Migrations.Core.Legacy.Grid;
+using static Lucene.Net.Queries.Function.ValueSources.MultiFunction;
 
 namespace uSync.Migrations.Migrators.BlockGrid.BlockMigrators;
 
@@ -47,14 +48,16 @@ public class GridMediaBlockMigrator : GridBlockMigratorSimpleBase, ISyncBlockMig
         {
             mediaKeyGuid = guidUdi.Guid;
         }
-
+        /*
         var values = new
         {
             key = Guid.NewGuid(),
             mediaKey = mediaKeyGuid
         }.AsEnumerableOfOne();
-
+        
         properties.Add("media", JsonConvert.SerializeObject(values));
+        */
+        properties.Add("media", mediaKeyGuid); // this still has to go through MediaPickerMigrator, which does not accept the above key+mediaKey format
 
         return properties;
     }
