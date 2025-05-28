@@ -9,6 +9,7 @@ namespace uSync.Migrations.Migrators.Core;
 
 [SyncMigrator(UmbEditors.Aliases.TinyMce, typeof(RichTextConfiguration), IsDefaultAlias = true)]
 [SyncMigrator("Umbraco.TinyMCEv3")]
+[SyncMigratorVersion(7, 8)]
 public class RichTextBoxMigrator : SyncPropertyMigratorBase
 {
     public override object? GetConfigValues(SyncMigrationDataTypeProperty dataTypeProperty, SyncMigrationContext context)
@@ -41,12 +42,15 @@ public class RichTextBoxMigrator : SyncPropertyMigratorBase
                         }
                     }
 
-                    var stylesheets = editor["stylesheets"] as JArray;
-                    if (stylesheets?.Count > 0)
+                    if (context.Metadata.SourceVersion < 8)
                     {
-                        for (int i = 0; i < stylesheets.Count; i++)
+                        var stylesheets = editor["stylesheets"] as JArray;
+                        if (stylesheets?.Count > 0)
                         {
-                            stylesheets[i].Replace($"/css/{stylesheets[i]}.css");
+                            for (int i = 0; i < stylesheets.Count; i++)
+                            {
+                                stylesheets[i].Replace($"/css/{stylesheets[i]}.css");
+                            }
                         }
                     }
 

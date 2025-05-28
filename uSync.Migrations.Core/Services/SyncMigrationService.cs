@@ -1,13 +1,11 @@
-using System.Diagnostics;
-
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
 using NUglify.Helpers;
-
+using System.Data.Common;
+using System.Diagnostics;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Extensions;
-
 using uSync.BackOffice.Configuration;
 using uSync.Migrations.Core.Composing;
 using uSync.Migrations.Core.Configuration;
@@ -30,6 +28,7 @@ internal class SyncMigrationService : ISyncMigrationService
     private readonly uSyncConfigService _uSyncConfig;
     private readonly SyncPropertyMigratorCollection _migrators;
     private readonly SyncPropertyMergingCollection _mergingCollection;
+    private readonly IConfiguration _configuration;
 
     public SyncMigrationService(
         IOptions<uSyncMigrationOptions> options,
@@ -39,7 +38,8 @@ internal class SyncMigrationService : ISyncMigrationService
         uSyncConfigService uSyncConfig,
         SyncMigrationValidatorCollection migrationValidators,
         SyncPropertyMigratorCollection migrators,
-        SyncPropertyMergingCollection mergingCollection)
+        SyncPropertyMergingCollection mergingCollection,
+        IConfiguration configuration)
     {
         _options = options;
         _logger = logger;
@@ -50,6 +50,7 @@ internal class SyncMigrationService : ISyncMigrationService
         _migrationValidators = migrationValidators;
         _migrators = migrators;
         _mergingCollection = mergingCollection;
+        _configuration = configuration;
     }
 
     public IEnumerable<string> HandlerTypes(int version)
@@ -95,7 +96,11 @@ internal class SyncMigrationService : ISyncMigrationService
 
         var siteFolder = _migrationFileService.GetWebSitePath(options.SiteFolder);
         var siteFolderIsSameAsWebsite = siteFolder.Equals(_migrationFileService.GetWebSitePath("/"));
-        var validationContext = new SyncValidationContext(options, Guid.Empty, options.Source, siteFolder, siteFolderIsSameAsWebsite, options.SourceVersion);
+
+        DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder();
+        dbConnectionStringBuilder.ConnectionString = _configuration["ConnectionStrings:umbracoDbDSN"];
+
+        var validationContext = new SyncValidationContext(options, Guid.Empty, options.Source, siteFolder, siteFolderIsSameAsWebsite, options.SourceVersion, (string)dbConnectionStringBuilder["Database"]);
 
         var messages = new List<MigrationMessage>();
 
@@ -207,7 +212,10 @@ internal class SyncMigrationService : ISyncMigrationService
         var siteFolder = _migrationFileService.GetWebSitePath(options.SiteFolder);
         var siteFolderIsSameAsWebsite = siteFolder.Equals(_migrationFileService.GetWebSitePath("/"));
 
-        var context = new SyncMigrationContext(migrationId, sourceRoot, siteFolder, siteFolderIsSameAsWebsite, options.SourceVersion);
+        DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder();
+        dbConnectionStringBuilder.ConnectionString = _configuration["ConnectionStrings:umbracoDbDSN"];
+
+        var context = new SyncMigrationContext(migrationId, sourceRoot, siteFolder, siteFolderIsSameAsWebsite, options.SourceVersion, (string)dbConnectionStringBuilder["Database"]);
         context.Callbacks = options.Callbacks;
 
         context.SendUpdate("Preparing Migration", 0, 10);

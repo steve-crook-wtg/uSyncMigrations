@@ -7,14 +7,15 @@ namespace uSync.Migrations.Core.Context;
 /// </summary>
 public class SyncMigrationContext : IDisposable
 {
-    public SyncMigrationContext(Guid migrationId, string sourceFolder, string siteFolder, bool siteIsSite, int version)
+    public SyncMigrationContext(Guid migrationId, string sourceFolder, string siteFolder, bool siteIsSite, int version, string databaseName)
     {
         Metadata = new MigrationContextMetadata(
             migrationId: migrationId,
             sourceFolder: sourceFolder,
             siteFolder: siteFolder,
             siteIsSite: siteIsSite,
-            sourceVersion: version);
+            sourceVersion: version,
+            databaseName: databaseName);
     }
 
     /// <summary>

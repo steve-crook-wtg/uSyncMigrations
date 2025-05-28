@@ -8,14 +8,15 @@ namespace uSync.Migrations.Core.Context;
 public class SyncValidationContext
 {
     public SyncValidationContext(MigrationOptions options,
-        Guid migrationId, string sourceFolder, string siteFolder, bool siteIsSite, int version)
+        Guid migrationId, string sourceFolder, string siteFolder, bool siteIsSite, int version, string databaseName)
     {
         Metadata = new MigrationContextMetadata(
             migrationId: migrationId,
             sourceFolder: sourceFolder,
             siteFolder: siteFolder,
             siteIsSite: siteIsSite,
-            sourceVersion: version);
+            sourceVersion: version,
+            databaseName: databaseName);
 
         Options = options;
     }

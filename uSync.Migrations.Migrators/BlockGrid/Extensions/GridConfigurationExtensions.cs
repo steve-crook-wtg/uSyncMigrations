@@ -71,6 +71,36 @@ internal static class GridConfigurationExtensions
                 {
                     label = $"{label} ({context.ContentTypes.GetAliasByKey(elementKey)})";
                 }*/
+
+                string? stylesheet = null;
+
+                if (label.ToLower() == "rich text editor")
+                {
+                    Dictionary<string, string> dbSubstringToStylesheets = new Dictionary<string, string>()
+                    {
+                        { "blumeglobal", "blumeglobal" },
+                        { "bolero", "bolero" },
+                        { "bysoft", "bysoft" },
+                        { "containerchain", "containerchain" },
+                        { "forms", "cargowise" },
+                        { "partners", "partners" },
+                        { "pierbridge", "pierbridge" },
+                        { "singeste", "singeste" },
+                        { "sisa", "sisa" },
+                        { "softship", "softship" },
+                        { "wisetechglobal", "cargowise" }
+                    };
+
+                    foreach (string key in dbSubstringToStylesheets.Keys)
+                    {
+                        if (context.Metadata.DatabaseName.InvariantContains(key))
+                        {
+                            stylesheet = $"~/css/{dbSubstringToStylesheets[key]}.css";
+                            break;
+                        }
+                    }
+                }
+
                 yield return new BlockGridConfiguration.BlockGridBlockConfiguration
                 {
                     Label = label,
@@ -80,7 +110,8 @@ internal static class GridConfigurationExtensions
                     IconColor = Grid.GridBlocks.Icon,
                     View = Grid.GridBlocks.View,
                     AllowAtRoot = false,
-                    EditorSize = Grid.GridBlocks.EditorSize
+                    EditorSize = Grid.GridBlocks.EditorSize,
+                    Stylesheet = stylesheet
                 };
             }
         }

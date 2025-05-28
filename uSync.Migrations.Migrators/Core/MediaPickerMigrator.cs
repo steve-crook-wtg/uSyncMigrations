@@ -48,7 +48,8 @@ public class MediaPickerMigrator : SyncPropertyMigratorBase
 
     public override string? GetContentValue(SyncMigrationContentProperty contentProperty, SyncMigrationContext context)
     {
-        if (string.IsNullOrWhiteSpace(contentProperty.Value))
+        if (string.IsNullOrWhiteSpace(contentProperty.Value) ||
+            contentProperty.Value.Contains("mediaKey")) // already migrated?
         {
             return contentProperty.Value;
         }

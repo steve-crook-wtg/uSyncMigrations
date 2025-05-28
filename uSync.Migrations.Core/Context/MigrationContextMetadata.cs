@@ -33,13 +33,16 @@ public class MigrationContextMetadata
     /// </summary>
     public string DefaultLanguage { get; set; } = string.Empty;
 
-    public MigrationContextMetadata(Guid migrationId, string sourceFolder, string siteFolder, bool siteIsSite, int sourceVersion)
+    public string DatabaseName { get; set; } = string.Empty;
+
+    public MigrationContextMetadata(Guid migrationId, string sourceFolder, string siteFolder, bool siteIsSite, int sourceVersion, string databaseName)
     {
         MigrationId = migrationId;
         SourceFolder = sourceFolder;
         SourceVersion = sourceVersion;
         SiteFolder = siteFolder;
         SiteFolderIsSite = siteIsSite;
+        DatabaseName = databaseName;
     }
 
 }
