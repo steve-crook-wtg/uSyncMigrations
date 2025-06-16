@@ -31,7 +31,9 @@ public class MediaPickerMigrator : SyncPropertyMigratorBase
         };
 
         var imageOnly = dataTypeProperty.PreValues.GetPreValueOrDefault("onlyImages", false);
-        if (imageOnly) config.Filter = UmbConstants.Conventions.MediaTypes.Image + "," + UmbConstants.Conventions.MediaTypes.VectorGraphics;
+        if (imageOnly) config.Filter = UmbConstants.Conventions.MediaTypes.Image + "," +
+                                       UmbConstants.Conventions.MediaTypes.VectorGraphicsAlias + "," +
+                                       UmbConstants.Conventions.MediaTypes.File;
 
         var config1 = config.MapPreValues(dataTypeProperty.PreValues);
 

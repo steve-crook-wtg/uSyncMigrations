@@ -238,6 +238,7 @@ internal class GridToBlockGridConfigLayoutBlockHelper
 
         foreach (var (alias, block) in gridBlockContext.LayoutBlocks)
         {
+            block.AllowInAreas = false; // WTG addition - no sub layouts
             if (rootAllowed.Contains(block.Label))
             {
                 block.AllowAtRoot = true;
