@@ -149,7 +149,7 @@ internal class GridToBlockContentHelper
                     {
                         var areaItem = new BlockGridLayoutAreaItem
                         {
-                            Key = _conventions.LayoutAreaAlias(row.Name!, _conventions.AreaAlias(area.index)).ToGuid(),
+                            Key = _conventions.LayoutAreaAlias(CleanRowName(row.Name!), _conventions.AreaAlias(area.index)).ToGuid(),
                             Items = layouts.ToArray()
                         };
 
@@ -280,7 +280,7 @@ internal class GridToBlockContentHelper
 
     private BlockContentPair GetGridRowBlockContentAndSettings(GridValue.GridRow row, SyncMigrationContext context, string dataTypeAlias)
     {
-        var rowLayoutContentTypeAlias = _conventions.LayoutContentTypeAlias(row.Name);
+        var rowLayoutContentTypeAlias = _conventions.LayoutContentTypeAlias(CleanRowName(row.Name));
         var rowContentTypeKey = context.GetContentTypeKeyOrDefault(rowLayoutContentTypeAlias, rowLayoutContentTypeAlias.ToGuid());
 
         var contentData = new BlockItemData
@@ -294,6 +294,21 @@ internal class GridToBlockContentHelper
 
         return new BlockContentPair(content: contentData, settings: settingsData);
     }
+
+    private string CleanRowName(string rowName)
+    {
+        // these are aliases in U10 which are now names in U13
+        switch (rowName)
+        {
+            case "Narrow, Wide (2/10)":
+                return "Narrow, wide (2/10)";
+            case "Wise, narrow (8/4)":
+                return "Wide, narrow (8/4)";
+            default:
+                return rowName;
+        }
+    }
+
     private BlockItemData? GetSettingsBlockItemDataFromRow(GridValue.GridRow row, SyncMigrationContext context, string dataTypeAlias, Udi contentUdi)
     {
         if (dataTypeAlias.IsNullOrWhiteSpace())
