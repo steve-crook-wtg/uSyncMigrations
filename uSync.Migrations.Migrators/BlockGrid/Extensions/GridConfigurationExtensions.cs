@@ -100,6 +100,10 @@ internal static class GridConfigurationExtensions
                         }
                     }
                 }
+                else
+                {
+                    stylesheet = "~/css/block-preview.css";
+                }
 
                 yield return new BlockGridConfiguration.BlockGridBlockConfiguration
                 {
